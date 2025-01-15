@@ -1,0 +1,22 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+  roles:
+    - { role: common, tags: common }
+
+- hosts: all
+  tasks:
+    - name: Check that we're not a root user
+      when: ansible_env.USER != admin
+      fail:
+        msg: Please restart the playbook with {{ admin }} user.
+
+- hosts: all
+  become: yes
+  roles:
+    - { role: caddy_ansible.caddy_ansible, tags: caddy }
+    - { role: prometheus.prometheus.node_exporter, tags: exporter }
+    - { role: prometheus.prometheus.prometheus, tags: prometheus }
+    - { role: prometheus.prometheus.alertmanager, tags: alerts }
+    - { role: grafana.grafana.grafana, tags: grafana }

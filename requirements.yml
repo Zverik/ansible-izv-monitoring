@@ -1,0 +1,11 @@
+---
+collections:
+  - name: prometheus.prometheus
+    type: galaxy
+    version: "0.23.0"
+  - name: grafana.grafana
+    type: galaxy
+    version: "5.7.0"
+
+roles:
+  - name: caddy_ansible.caddy_ansible

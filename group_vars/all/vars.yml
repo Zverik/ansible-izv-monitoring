@@ -1,0 +1,39 @@
+---
+admin: zverik
+
+caddy_config: |
+  monitor.izv.ee {
+    reverse_proxy 127.0.0.1:3000
+  }
+  p.monitor.izv.ee {
+    reverse_proxy 127.0.0.1:9090
+  }
+  a.monitor.izv.ee {
+    reverse_proxy 127.0.0.1:9093
+  }
+
+grafana_ini:
+  security:
+    admin_user: "{{ v_grafana_admin_user }}"
+    admin_password: "{{ v_grafana_admin_password }}"
+
+grafana_datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: "http://127.0.0.1:9090"
+    isDefault: true
+
+alertmanager_web_external_url: "https://a.monitor.izv.ee"
+alertmanager_receivers:
+  - name: telegram
+    telegram_configs:
+      - bot_token: "{{ v_telegram_token }}"
+        chat_id: -1002270253193
+
+alertmanager_route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 3h
+  receiver: telegram
