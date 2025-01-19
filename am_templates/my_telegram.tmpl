@@ -1,0 +1,29 @@
+{{- define "my.severity.emoji" -}}
+{{- $priority := "" -}}
+{{- $severity := index .Labels "severity" -}}
+{{- if (eq $severity "critical") -}}
+    {{- $priority = "🚨" -}}
+{{- else if (eq $severity "warning") -}}
+    {{- $priority = "⚠️" -}}
+{{- else if (eq $severity "info") -}}
+    {{- $priority = "ℹ️" -}}
+{{- end -}}
+{{- $priority -}}
+{{- end -}}
+
+{{- define "my.alert.desc" -}}
+{{- index .Annotations "summary" -}}
+{{- $desc := index .Annotations "description" -}}
+{{ if (ne $desc "") }}
+{{ $desc }}{{ end }}
+{{ .GeneratorURL }}
+{{ end }}
+
+{{- define "my.telegram.message" -}}
+{{- range .Alerts.Firing -}}
+{{- template "my.severity.emoji" . }} [FIRING] {{ template "my.alert.desc" . -}}
+{{- end -}}
+{{- range .Alerts.Resolved -}}
+{{ template "my.severity.emoji" . }} [Resolved] {{ template "my.alert.desc" . -}}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,23 @@
+---
+grafana_ini:
+  security:
+    admin_user: "{{ v_grafana_admin_user }}"
+    admin_password: "{{ v_grafana_admin_password }}"
+
+grafana_datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: "http://127.0.0.1:9090"
+    isDefault: true
+
+grafana_dashboards:
+  - dashboard_id: 7362
+    revision_id: 5
+    datasource: Prometheus
+  - dashboard_id: 1860
+    revision_id: 37
+    datasource: Prometheus
+  - dashboard_id: 9628
+    revision_id: 8
+    datasource: Prometheus
